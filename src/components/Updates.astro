@@ -1,0 +1,80 @@
+---
+import SectionHeading from './SectionHeading.astro';
+---
+
+<section id="updates" class="bg-white py-[var(--spacing-section)]">
+  <div class="mx-auto max-w-6xl px-5 md:px-8">
+    <SectionHeading
+      eyebrow="Cases & Updates"
+      title="事例・アップデート情報"
+      lead="導入事例や機能アップデート、お知らせを時系列でまとめています。紹介先への最新トピック共有にどうぞ。"
+    />
+
+    <div class="reveal mt-12">
+      <ul class="divide-y divide-border border-t border-border" data-updates-list>
+        <li class="py-6 text-sm text-gray-medium" data-updates-status>読み込み中…</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { fetchSheet, esc, safeUrl } from '../lib/sheet';
+  import { config } from '../site.config';
+
+  const listEl = document.querySelector('[data-updates-list]');
+  const statusEl = document.querySelector('[data-updates-status]');
+
+  function badgeColor(cat: string): string {
+    const s = cat || '';
+    if (s.includes('事例')) return 'bg-navy text-white';
+    if (s.includes('アップデート') || s.includes('機能')) return 'bg-electric text-white';
+    return 'bg-surface text-offblack';
+  }
+
+  async function init() {
+    if (!config.sheets.spreadsheetId) {
+      if (statusEl)
+        statusEl.textContent = 'スプレッドシート未設定です（site.config.ts を設定してください）。';
+      return;
+    }
+    try {
+      const rows = await fetchSheet(config.sheets.tabs.updates);
+      const items = rows.map((r) => ({
+        date: r['date'] || r['日付'] || '',
+        category: r['category'] || r['カテゴリ'] || '',
+        title: r['title'] || r['タイトル'] || '',
+        summary: r['summary'] || r['概要'] || '',
+        url: r['url'] || r['URL'] || r['リンク'] || '',
+      }));
+      // 日付の新しい順
+      items.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+      if (!listEl) return;
+      if (!items.length) {
+        listEl.innerHTML = '<li class="py-6 text-sm text-gray-medium">更新情報はまだありません。</li>';
+        return;
+      }
+      listEl.innerHTML = items
+        .map((u) => {
+          const url = safeUrl(u.url);
+          const head = `
+            <span class="flex flex-wrap items-center gap-3">
+              ${u.date ? `<time class="text-sm tabular-nums text-gray-medium">${esc(u.date)}</time>` : ''}
+              ${u.category ? `<span class="rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${badgeColor(u.category)}">${esc(u.category)}</span>` : ''}
+            </span>
+            <span class="mt-2 block text-base font-semibold text-navy">${esc(u.title)}${url ? ' <span class="text-electric">↗</span>' : ''}</span>
+            ${u.summary ? `<span class="mt-1 block text-sm leading-relaxed text-offblack/70">${esc(u.summary)}</span>` : ''}`;
+          return `<li class="py-6">${
+            url
+              ? `<a href="${url}" target="_blank" rel="noopener" class="block transition-opacity hover:opacity-70">${head}</a>`
+              : head
+          }</li>`;
+        })
+        .join('');
+    } catch (e) {
+      if (statusEl) statusEl.textContent = '更新情報の読み込みに失敗しました。';
+    }
+  }
+
+  init();
+</script>

@@ -1,0 +1,108 @@
+@import 'tailwindcss';
+
+/*
+ * WHERE デザインシステム（Design-System-Inspired-by-WHERE.md 準拠）
+ * 超高コントラストのモノクロを基調に、エレクトリックブルーをアクセントに用いる。
+ */
+@theme {
+  /* --- Color: Primary --- */
+  --color-black: #000000;
+  --color-white: #ffffff;
+
+  /* --- Color: Accent --- */
+  --color-electric: #0000ee; /* Electric Blue: 主要なインタラクション */
+  --color-navy: #121d2a; /* Deep Navy: プレミアム見出し/オーバーレイ */
+  --color-corporate: #1556a5; /* Corporate Blue */
+  --color-steel: #12519c; /* Steel Blue */
+
+  /* --- Neutral Scale --- */
+  --color-offblack: #222222;
+  --color-gray-medium: #8c8c8c;
+  --color-gray-light: #e6e6e6;
+  --color-gray-pale: #d9d9d9;
+
+  /* --- Surface & Borders --- */
+  --color-surface: #f5f5f5;
+  --color-surface-soft: #fafafa;
+  --color-border: #e6e6e6;
+
+  /* --- Typography --- */
+  --font-sans:
+    'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica,
+    Arial, sans-serif;
+  --font-display: 'Marcellus', Georgia, 'Times New Roman', serif;
+
+  /* --- Layout --- */
+  --spacing-section: 7rem;
+}
+
+/* --- Base reset / globals --- */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-offblack);
+  background: var(--color-white);
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
+::selection {
+  background: var(--color-electric);
+  color: var(--color-white);
+}
+
+/* キーボード操作時のフォーカスリング（アクセシビリティ） */
+:focus-visible {
+  outline: 2px solid var(--color-electric);
+  outline-offset: 2px;
+}
+
+/* --- Typography helpers --- */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+/* セクション見出しに使う小さなラベル（メタ） */
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-gray-medium);
+  font-weight: 600;
+}
+
+/* スクロール時のセクション内アンカーがヘッダーに隠れないように */
+[id] {
+  scroll-margin-top: 6rem;
+}
+
+/* prefers-reduced-motion 対応 */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* 簡易な登場アニメーション（IntersectionObserver で .is-visible を付与） */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}

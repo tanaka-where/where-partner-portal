@@ -1,0 +1,49 @@
+---
+import SectionHeading from './SectionHeading.astro';
+
+// オンボーディングの本文。文言はこの配列を編集すれば差し替えできる。
+const points = [
+  {
+    no: '01',
+    title: 'WHEREとは',
+    body: '地域に眠る課題と可能性を「場所（WHERE）」を起点に捉え、データとテクノロジーで地域経済の循環を支援する会社です。まずは全体像を掴むところから。',
+  },
+  {
+    no: '02',
+    title: '何を提供するか',
+    body: 'パートナーが紹介先へ届けるべき価値を、サービス概要・活用シーン・導入メリットの順で整理。初回提案でそのまま使える粒度でまとめています。',
+  },
+  {
+    no: '03',
+    title: 'どう使うか',
+    body: 'このポータルから最新資料を取得し、PLANERで体験を共有し、勉強会へ案内する——紹介から定着までの導線を一本化します。',
+  },
+];
+---
+
+<section id="about" class="bg-white py-[var(--spacing-section)]">
+  <div class="mx-auto max-w-6xl px-5 md:px-8">
+    <SectionHeading
+      eyebrow="Onboarding"
+      title="まずは WHERE を理解する"
+      lead="紹介先に自信を持って伝えられるよう、WHEREの全体像と提供価値をコンパクトにまとめました。"
+    />
+
+    <div class="mt-14 grid gap-px overflow-hidden rounded-sm border border-border bg-border md:grid-cols-3">
+      {
+        points.map((p) => (
+          <div class="reveal flex flex-col bg-white p-8 md:p-10">
+            <span class="font-display text-3xl text-electric">{p.no}</span>
+            <h3 class="mt-5 text-xl font-semibold text-navy">{p.title}</h3>
+            <p class="mt-3 text-[15px] leading-relaxed text-offblack/80">{p.body}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="reveal mt-10 flex flex-wrap items-center gap-4 rounded-sm bg-surface px-6 py-5 text-sm">
+      <span class="font-semibold text-navy">補足資料が必要ですか？</span>
+      <a href="#resources" class="text-electric underline-offset-4 hover:underline">概要資料・操作マニュアルはこちら →</a>
+    </div>
+  </div>
+</section>

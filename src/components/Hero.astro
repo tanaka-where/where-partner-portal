@@ -1,0 +1,57 @@
+---
+import { config } from '../site.config';
+---
+
+<section
+  class="relative flex min-h-[88vh] items-center overflow-hidden bg-black text-white"
+>
+  <!-- 背景：オービタル/グリッドの含意（軽量SVG） -->
+  <div class="pointer-events-none absolute inset-0 opacity-[0.35]" aria-hidden="true">
+    <svg class="absolute -right-40 -top-40 h-[80vh] w-[80vh]" viewBox="0 0 600 600" fill="none">
+      <circle cx="300" cy="300" r="299" stroke="#1556A5" stroke-width="0.6" />
+      <circle cx="300" cy="300" r="230" stroke="#12519C" stroke-width="0.6" />
+      <circle cx="300" cy="300" r="150" stroke="#0000EE" stroke-width="0.8" />
+      <ellipse cx="300" cy="300" rx="299" ry="120" stroke="#1556A5" stroke-width="0.5" />
+    </svg>
+  </div>
+  <div
+    class="pointer-events-none absolute inset-0"
+    style="background:radial-gradient(120% 80% at 80% 0%, rgba(0,0,238,0.18), transparent 55%)"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="relative mx-auto w-full max-w-6xl px-5 pt-28 pb-20 md:px-8">
+    <p class="eyebrow text-white/60">WHERE PARTNER PORTAL</p>
+    <h1
+      class="mt-6 max-w-4xl font-display text-[clamp(2.05rem,6.4vw,4.75rem)] leading-[1.14] tracking-tight"
+    >
+      紹介先に届ける、<br />WHEREの最新情報を<span class="text-electric">ひとつの場所</span>に。
+    </h1>
+    <p class="mt-7 max-w-2xl text-base leading-relaxed text-white/70 md:text-lg">
+      {config.description}
+      パートナー担当者が必要な資料・事例・申込導線を、迷わず取り出せるように整えています。
+    </p>
+
+    <div class="mt-10 flex flex-wrap gap-4">
+      <a
+        href="#about"
+        class="inline-flex items-center gap-2 bg-white px-7 py-3.5 text-sm font-semibold text-black transition-transform hover:-translate-y-0.5"
+      >
+        WHEREを知る
+        <span aria-hidden="true">→</span>
+      </a>
+      <a
+        href="#resources"
+        class="inline-flex items-center gap-2 border border-white/30 px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:border-white"
+      >
+        資料を探す
+      </a>
+    </div>
+  </div>
+
+  <!-- スクロール誘導 -->
+  <div class="absolute bottom-7 left-1/2 -translate-x-1/2 text-xs tracking-widest text-white/40">
+    SCROLL
+  </div>
+</section>

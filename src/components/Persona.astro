@@ -1,0 +1,59 @@
+---
+import SectionHeading from './SectionHeading.astro';
+
+// 対象ユーザーペルソナ。差し替えはこの配列を編集。
+const personas = [
+  {
+    tag: '自治体・公共',
+    name: '地域振興のキーパーソン',
+    needs: '地域経済の現状をデータで把握し、施策の根拠と効果測定を求めている。',
+    fit: '客観データに基づく現状可視化と、関係者への説明資料づくりを支援。',
+  },
+  {
+    tag: '事業会社',
+    name: '出店・エリア戦略の担当',
+    needs: '新規出店や商圏分析の精度を上げ、意思決定のスピードを高めたい。',
+    fit: '人流・商圏データで候補地評価を高速化し、投資判断を後押し。',
+  },
+  {
+    tag: '地域企業・士業',
+    name: '地元に根ざす支援者',
+    needs: '取引先・顧客へ提供できる新しい価値の選択肢を探している。',
+    fit: 'パートナーとして紹介できる、地域課題解決のソリューションを提供。',
+  },
+];
+---
+
+<section id="persona" class="bg-navy py-[var(--spacing-section)] text-white">
+  <div class="mx-auto max-w-6xl px-5 md:px-8">
+    <SectionHeading
+      eyebrow="Target Persona"
+      title="誰に、何を届けるのか"
+      lead="紹介先のタイプ別に、抱える課題と WHERE がフィットする理由を整理しました。提案前の見極めにご活用ください。"
+      dark
+    />
+
+    <div class="mt-14 grid gap-6 md:grid-cols-3">
+      {
+        personas.map((p) => (
+          <article class="reveal flex flex-col border border-white/15 bg-white/[0.03] p-8 transition-colors hover:border-white/40">
+            <span class="self-start rounded-full border border-white/25 px-3 py-1 text-xs text-white/70">
+              {p.tag}
+            </span>
+            <h3 class="mt-5 text-lg font-semibold">{p.name}</h3>
+            <div class="mt-5 space-y-4 text-sm leading-relaxed text-white/70">
+              <p>
+                <span class="block text-xs font-semibold tracking-wide text-white/50">課題・ニーズ</span>
+                {p.needs}
+              </p>
+              <p>
+                <span class="block text-xs font-semibold tracking-wide text-white/50">WHEREのフィット</span>
+                {p.fit}
+              </p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,84 @@
+---
+import SectionHeading from './SectionHeading.astro';
+---
+
+<section id="videos" class="bg-surface py-[var(--spacing-section)]">
+  <div class="mx-auto max-w-6xl px-5 md:px-8">
+    <SectionHeading
+      eyebrow="How-to Videos"
+      title="操作説明の録画"
+      lead="実際の操作手順を録画で確認できます。紹介先への説明や、担当者ご自身の予習にお使いください。"
+    />
+
+    <div class="reveal mt-12">
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" data-videos-list>
+        <p class="col-span-full text-sm text-gray-medium" data-videos-status>読み込み中…</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { fetchSheet, esc, safeUrl } from '../lib/sheet';
+  import { config } from '../site.config';
+
+  const listEl = document.querySelector('[data-videos-list]');
+  const statusEl = document.querySelector('[data-videos-status]');
+
+  // YouTube のサムネイル URL を抽出（取れなければ空）
+  function youtubeThumb(url: string): string {
+    const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]{11})/);
+    return m ? `https://i.ytimg.com/vi/${m[1]}/hqdefault.jpg` : '';
+  }
+
+  async function init() {
+    if (!config.sheets.spreadsheetId) {
+      if (statusEl)
+        statusEl.textContent = 'スプレッドシート未設定です（site.config.ts を設定してください）。';
+      return;
+    }
+    try {
+      const rows = await fetchSheet(config.sheets.tabs.videos);
+      const items = rows.map((r) => ({
+        title: r['title'] || r['タイトル'] || '',
+        description: r['description'] || r['説明'] || '',
+        url: r['url'] || r['URL'] || r['リンク'] || '',
+        thumbnail: r['thumbnail'] || r['サムネイル'] || '',
+        duration: r['duration'] || r['長さ'] || '',
+      }));
+      if (!listEl) return;
+      if (!items.length) {
+        listEl.innerHTML = '<p class="col-span-full text-sm text-gray-medium">録画はまだ登録されていません。</p>';
+        return;
+      }
+      listEl.innerHTML = items
+        .map((v) => {
+          const url = safeUrl(v.url);
+          const thumb = safeUrl(v.thumbnail) || (url ? youtubeThumb(url) : '');
+          const media = thumb
+            ? `<img src="${thumb}" alt="" loading="lazy" class="h-full w-full object-cover" />`
+            : `<span class="font-display text-xl text-white/80">VIDEO</span>`;
+          const inner = `
+            <span class="relative flex aspect-video items-center justify-center overflow-hidden bg-navy">
+              ${media}
+              <span class="absolute inset-0 flex items-center justify-center">
+                <span class="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-navy">▶</span>
+              </span>
+              ${v.duration ? `<span class="absolute bottom-2 right-2 rounded bg-black/75 px-1.5 py-0.5 text-[11px] text-white">${esc(v.duration)}</span>` : ''}
+            </span>
+            <span class="block p-5">
+              <span class="block text-base font-semibold text-navy">${esc(v.title)}</span>
+              ${v.description ? `<span class="mt-2 block text-sm leading-relaxed text-offblack/70">${esc(v.description)}</span>` : ''}
+            </span>`;
+          return url
+            ? `<a href="${url}" target="_blank" rel="noopener" class="group overflow-hidden border border-border bg-white transition-all hover:-translate-y-0.5 hover:shadow-md">${inner}</a>`
+            : `<div class="overflow-hidden border border-border bg-white">${inner}</div>`;
+        })
+        .join('');
+    } catch (e) {
+      if (statusEl) statusEl.textContent = '録画の読み込みに失敗しました。';
+    }
+  }
+
+  init();
+</script>
