@@ -86,10 +86,24 @@ formEndpoint: '（手順3の /exec URL）',
 planer: { embedUrl: '（PLANER の埋め込みURL）', linkUrl: '' },
 ```
 
-### 5. 反映
+### 5. 反映（再デプロイ）
 
-`main` ブランチに push すると GitHub Actions が自動でビルド & 公開する。
-公開 URL は GitHub の **Settings → Pages** で確認できる。
+現在の公開方式は **`gh-pages` ブランチへ `dist/` を配置** する方式（GitHub Pages の
+ソース＝`gh-pages` / ルート）。`src/` や `site.config.ts` を変更したら、次のコマンドで再ビルド & 公開する。
+
+```bash
+npm run build
+touch dist/.nojekyll          # _astro フォルダを配信させるために必須
+npx gh-pages -d dist -b gh-pages   # もしくは下記スクリプト相当の手動 push
+```
+
+> **補足**: GitHub Actions による自動デプロイにも対応可能（`docs/github-actions-deploy.yml.example` 参照）。
+> その場合は `gh auth refresh -s workflow` でトークンに `workflow` 権限を付与し、ファイルを
+> `.github/workflows/deploy.yml` に戻して push、Pages のソースを「GitHub Actions」に変更する。
+> 以後は `main` への push だけで自動ビルド & 公開される。
+
+公開 URL: **https://tanaka-where.github.io/where-partner-portal/**
+（GitHub の **Settings → Pages** でも確認できる）
 
 ---
 
