@@ -101,14 +101,14 @@ import SectionHeading from './SectionHeading.astro';
   }
 
   async function init() {
-    if (!config.sheets.spreadsheetId) {
+    if (!config.sheets.resources) {
       if (statusEl)
         statusEl.textContent =
-          'スプレッドシート未設定です（site.config.ts の spreadsheetId を設定してください）。';
+          'スプレッドシート未設定です（site.config.ts の sheets.resources を設定してください）。';
       return;
     }
     try {
-      const rows = await fetchSheet(config.sheets.tabs.resources);
+      const rows = await fetchSheet(config.sheets.resources);
       items = rows.map((r) => ({
         category: r['category'] || r['カテゴリ'] || '',
         title: r['title'] || r['タイトル'] || '',

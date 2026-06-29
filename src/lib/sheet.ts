@@ -1,19 +1,17 @@
-import { config } from '../site.config';
-
 export type SheetRow = Record<string, string>;
 
 /**
- * 公開済み Google スプレッドシートの 1 タブを gviz JSON で取得し、
+ * 公開済み Google スプレッドシートの先頭タブを gviz JSON で取得し、
  * ヘッダー行をキーにしたオブジェクト配列で返す（クライアントサイドで実行）。
- * spreadsheetId 未設定時は空配列。
+ * spreadsheetId が空なら空配列。
  */
-export async function fetchSheet(tab: string): Promise<SheetRow[]> {
-  const id = config.sheets.spreadsheetId;
+export async function fetchSheet(spreadsheetId: string): Promise<SheetRow[]> {
+  const id = spreadsheetId;
   if (!id) return [];
 
   const url =
     `https://docs.google.com/spreadsheets/d/${id}/gviz/tq` +
-    `?tqx=out:json&headers=1&sheet=${encodeURIComponent(tab)}`;
+    `?tqx=out:json&headers=1`;
 
   const res = await fetch(url);
   if (!res.ok) throw new Error(`sheet fetch failed: ${res.status}`);

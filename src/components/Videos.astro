@@ -32,13 +32,13 @@ import SectionHeading from './SectionHeading.astro';
   }
 
   async function init() {
-    if (!config.sheets.spreadsheetId) {
+    if (!config.sheets.videos) {
       if (statusEl)
-        statusEl.textContent = 'スプレッドシート未設定です（site.config.ts を設定してください）。';
+        statusEl.textContent = 'スプレッドシート未設定です（site.config.ts の sheets.videos を設定してください）。';
       return;
     }
     try {
-      const rows = await fetchSheet(config.sheets.tabs.videos);
+      const rows = await fetchSheet(config.sheets.videos);
       const items = rows.map((r) => ({
         title: r['title'] || r['タイトル'] || '',
         description: r['description'] || r['説明'] || '',

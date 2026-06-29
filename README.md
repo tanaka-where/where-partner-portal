@@ -27,38 +27,27 @@ gas/Code.gs             ← 申込フォーム受信用 GAS
 
 ## セットアップ（初回のみ）
 
-### 1. コンテンツ用スプレッドシートを用意
+### 1. コンテンツ用スプレッドシート
 
-1. Google スプレッドシートを新規作成し、シート（タブ）を 3 つ用意して以下の通り名前を付ける。
-   - `resources`（資料一覧） / `videos`（操作録画） / `updates`（事例・更新）
-2. 各シートの **1 行目をヘッダー** とし、次の列を作る。
+コンテンツは **3 つのスプレッドシート**（資料 / 録画 / 事例）で管理する。各シートは
+**1 行目がヘッダー**、先頭タブを読み込む。列構成は以下。
 
-   **resources タブ**
-   | category | title | description | type | url | updated |
-   |----------|-------|-------------|------|-----|---------|
-   | 概要 | サービス概要資料 | 紹介先への最初の一枚 | PDF | （Drive 共有リンク） | 2026-06 |
+**資料（resources）** — `category, title, description, type, url, updated`
+- `type` は `PDF` / `スライド` / `チラシ` / `動画` など自由記入（カードのラベル）
+- `category` でフィルタタブが自動生成される
+- `url` に Drive 共有リンクを貼る
 
-   - `type` は `PDF` / `スライド` / `チラシ` / `動画` などの自由記入（カードのラベルになる）
-   - `category` でフィルタタブが自動生成される
+**録画（videos）** — `title, description, url, thumbnail, duration`
+- YouTube リンクならサムネイルは自動取得される
 
-   **videos タブ**
-   | title | description | url | thumbnail | duration |
-   |-------|-------------|-----|-----------|----------|
-   | 基本操作 | ログインから検索まで | （YouTube/Drive リンク） | （任意） | 5:30 |
+**事例・更新（updates）** — `date, category, title, summary, url`
+- `date` 降順で自動ソート。`category` に「事例」「アップデート」を含むとバッジ色が変わる
 
-   - YouTube リンクならサムネイルは自動取得される
-
-   **updates タブ**
-   | date | category | title | summary | url |
-   |------|----------|-------|---------|-----|
-   | 2026-06-20 | 事例 | ○○市での活用事例 | 概要テキスト | （詳細リンク） |
-
-   - `date` 降順で自動ソート。`category` に「事例」「アップデート」を含むとバッジ色が変わる
-
-3. **共有設定**: 右上「共有」→「リンクを知っている全員」→「閲覧者」にする
-   （※サイトはこのシートを閲覧専用で読むだけ。編集権限は渡らない）
-4. スプレッドシートの URL から **ID** を控える
-   `https://docs.google.com/spreadsheets/d/`**`ここがID`**`/edit`
+> このリポジトリでは上記3シートを **作成・サンプル投入・ID 設定まで済ませてある**（`site.config.ts` 参照）。
+> 残る作業は **各シートを「リンクを知っている全員＝閲覧者」で共有** することだけ。
+> Google ドライブで 3 ファイルを複数選択 → 右クリック「共有」→「リンクを知っている全員」→「閲覧者」。
+> 新しく作り直す場合は ID を控えて `site.config.ts` の `sheets` を差し替える
+> （`https://docs.google.com/spreadsheets/d/`**`ここがID`**`/edit`）。
 
 ### 2. Drive にファイルを置く
 
@@ -81,10 +70,12 @@ gas/Code.gs             ← 申込フォーム受信用 GAS
 `src/site.config.ts` を開き、以下を設定する。
 
 ```ts
-sheets: { spreadsheetId: '（手順1のID）' },
+sheets: { resources: '（資料シートID）', videos: '（録画シートID）', updates: '（事例シートID）' },
 formEndpoint: '（手順3の /exec URL）',
-planer: { embedUrl: '（PLANER の埋め込みURL）', linkUrl: '' },
+planer: { embedUrl: '（PLANER の埋め込みURL）', linkUrl: '（同上：別タブ導線）' },
 ```
+
+> PLANER 埋め込み URL・フォームエンドポイント・3シートIDは **設定済み**。
 
 ### 5. 反映（再デプロイ）
 
