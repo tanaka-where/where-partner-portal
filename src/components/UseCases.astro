@@ -1,0 +1,43 @@
+---
+import SectionHeading from './SectionHeading.astro';
+
+const cases = [
+  {
+    no: '01',
+    title: '不動産デベロッパー / 仲介',
+    body: 'ハウスメーカー・売買仲介など。開発用地や戸建て用地の仕入れを、足で稼ぐ調査から仕組みでの探索へ転換。',
+  },
+  {
+    no: '02',
+    title: '再生可能エネルギー事業者',
+    body: '太陽光・蓄電所などの用地仕入れ。面積・法規制条件で候補地を抽出し、地権者アプローチまで効率化。',
+  },
+  {
+    no: '03',
+    title: '店舗・駐車場事業者',
+    body: '出店候補地やコインパーキング用地の探索・仕入れ。現地でのモバイル活用で候補地を即リスト化。',
+  },
+];
+---
+
+<section id="persona" class="border-b border-border bg-sky py-[var(--spacing-section)]">
+  <div class="mx-auto max-w-[1200px] px-5 md:px-8">
+    <SectionHeading
+      eyebrow="Use Cases"
+      title="想定ユースケース"
+      lead="紹介先のタイプ別に、WHEREが活用される主なシーンをまとめました。"
+    />
+
+    <div class="mt-12 grid gap-5 md:grid-cols-3">
+      {
+        cases.map((c) => (
+          <div class="reveal rounded-card border border-border bg-white p-7 shadow-feather">
+            <span class="text-xl font-semibold tracking-tight text-signal">{c.no}</span>
+            <h3 class="mt-4 text-[16px] font-semibold text-graphite">{c.title}</h3>
+            <p class="mt-2.5 text-[14px] leading-relaxed text-ash">{c.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,50 @@
+---
+import type { PressItem } from '../data/press';
+interface Props {
+  item: PressItem;
+}
+const { item } = Astro.props;
+
+// カテゴリで軽くサムネの色味を変える（案件=濃紺、ニュース=ブルー）
+const grad =
+  item.category === 'case'
+    ? 'linear-gradient(135deg,#0f1f3d 0%,#12306e 60%,#1a4fd6 100%)'
+    : 'linear-gradient(135deg,#12306e 0%,#1a4fd6 60%,#3b82f6 100%)';
+const d = new Date(item.date);
+const dateLabel = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+---
+
+<a
+  href={item.url}
+  target="_blank"
+  rel="noopener"
+  class="reveal group flex flex-col overflow-hidden rounded-card border border-border bg-white shadow-feather transition-all hover:-translate-y-0.5 hover:shadow-feature"
+>
+  <!-- サムネイル（ブランドビジュアル） -->
+  <div class="relative aspect-[16/9] overflow-hidden" style={`background:${grad}`}>
+    <svg class="absolute -right-6 -top-6 h-40 w-40 opacity-20" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <path d="M4 12l6 12L16 6l6 18 6-12" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    </svg>
+    <div class="absolute inset-0 flex flex-col justify-between p-5">
+      <span class="self-start rounded-badge bg-white/15 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-white backdrop-blur-sm">
+        {item.tag ?? (item.category === 'case' ? '導入事例' : 'ニュース')}
+      </span>
+      <span class="font-semibold tracking-tight text-white/95">WHERE</span>
+    </div>
+  </div>
+
+  <!-- 記事本文 -->
+  <div class="flex flex-1 flex-col p-6">
+    <time class="text-[12px] tabular-nums text-fog">{dateLabel}</time>
+    <h3 class="mt-2 text-[15px] font-semibold leading-snug text-graphite transition-colors group-hover:text-signal">
+      {item.title}
+    </h3>
+    <p class="mt-2.5 flex-1 text-[13px] leading-relaxed text-ash">{item.excerpt}</p>
+    <span class="mt-5 inline-flex items-center gap-1 text-[13px] font-medium text-signal">
+      記事を読む
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M7 17L17 7" /><path d="M8 7h9v9" />
+      </svg>
+    </span>
+  </div>
+</a>

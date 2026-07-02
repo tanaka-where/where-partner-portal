@@ -5,18 +5,18 @@ import { config } from '../site.config';
 const { embedUrl, linkUrl } = config.planer;
 ---
 
-<section id="planer" class="bg-surface py-[var(--spacing-section)]">
-  <div class="mx-auto max-w-6xl px-5 md:px-8">
+<section id="planer" class="border-b border-border bg-sky py-[var(--spacing-section)]">
+  <div class="mx-auto max-w-[1200px] px-5 md:px-8">
     <SectionHeading
       eyebrow="PLANER"
       title="PLANER を体験する"
-      lead="紹介先にそのまま見せられるよう、PLANER をこの場で操作・共有できるようにしています。"
+      lead="紹介先にそのまま見せられるインタラクティブなPLANERを、この場でご覧いただけます。"
     />
 
     <div class="reveal mt-12">
       {
         embedUrl ? (
-          <div class="overflow-hidden rounded-sm border border-border bg-white shadow-sm">
+          <div class="overflow-hidden rounded-image border border-border bg-white shadow-feature">
             <div class="aspect-[16/10] w-full md:aspect-[16/9]">
               <iframe
                 src={embedUrl}
@@ -29,27 +29,25 @@ const { embedUrl, linkUrl } = config.planer;
             </div>
           </div>
         ) : (
-          <div class="flex flex-col items-center justify-center rounded-sm border border-dashed border-gray-pale bg-white px-6 py-20 text-center">
-            <span class="font-display text-2xl text-navy">PLANER 埋め込み枠</span>
-            <p class="mt-3 max-w-md text-sm text-offblack/70">
-              <code class="rounded bg-surface px-1.5 py-0.5">src/site.config.ts</code> の
-              <code class="rounded bg-surface px-1.5 py-0.5">planer.embedUrl</code>
-              に埋め込み URL を設定すると、ここに PLANER が表示されます。
-            </p>
+          <div class="rounded-image border border-dashed border-hairline bg-white px-6 py-20 text-center text-ash">
+            PLANER 埋め込み枠
           </div>
         )
       }
 
       {
         linkUrl && (
-          <div class="mt-6 text-center">
+          <div class="mt-6">
             <a
               href={linkUrl}
               target="_blank"
               rel="noopener"
-              class="inline-flex items-center gap-2 border border-navy px-7 py-3.5 text-sm font-semibold text-navy transition-colors hover:bg-navy hover:text-white"
+              class="inline-flex items-center gap-2 rounded-input border border-action px-6 py-3 text-[14px] font-medium text-action transition-colors hover:bg-action hover:text-white"
             >
-              PLANER を別タブで開く ↗
+              PLANER を別タブで開く
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M7 17L17 7" /><path d="M8 7h9v9" />
+              </svg>
             </a>
           </div>
         )

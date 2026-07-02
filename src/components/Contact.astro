@@ -1,0 +1,124 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import { config } from '../site.config';
+
+const endpoint = config.formEndpoint;
+const inputCls =
+  'w-full rounded-input border border-hairline bg-white px-4 py-3 text-[14px] text-graphite placeholder-fog focus:border-signal focus:outline-none focus:ring-2 focus:ring-signal/20';
+---
+
+<section id="contact" class="py-[var(--spacing-section)]">
+  <div class="mx-auto max-w-[880px] px-5 md:px-8">
+    <SectionHeading
+      eyebrow="Contact"
+      title="面談申し込みフォーム"
+      lead="サービスのご相談・紹介先へのご案内について、担当よりご連絡します。以下よりお申し込みください。"
+    />
+
+    <div class="reveal mt-10 rounded-image border border-border bg-white p-7 shadow-feature md:p-10">
+      {
+        endpoint ? (
+          <form data-contact-form class="space-y-5" novalidate>
+            <div class="grid gap-5 md:grid-cols-2">
+              <label class="block">
+                <span class="mb-2 block text-[13px] font-medium text-slate">お名前 <span class="text-signal">*</span></span>
+                <input name="name" required type="text" autocomplete="name" class={inputCls} />
+              </label>
+              <label class="block">
+                <span class="mb-2 block text-[13px] font-medium text-slate">会社名・団体名 <span class="text-signal">*</span></span>
+                <input name="company" required type="text" autocomplete="organization" class={inputCls} />
+              </label>
+              <label class="block">
+                <span class="mb-2 block text-[13px] font-medium text-slate">メールアドレス <span class="text-signal">*</span></span>
+                <input name="email" required type="email" autocomplete="email" class={inputCls} />
+              </label>
+              <label class="block">
+                <span class="mb-2 block text-[13px] font-medium text-slate">電話番号（任意）</span>
+                <input name="phone" type="tel" autocomplete="tel" class={inputCls} />
+              </label>
+            </div>
+            <label class="block">
+              <span class="mb-2 block text-[13px] font-medium text-slate">ご相談内容・ご希望（任意）</span>
+              <textarea name="message" rows="4" class={inputCls}></textarea>
+            </label>
+
+            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="absolute -left-[9999px] h-0 w-0" aria-hidden="true" />
+
+            <div class="flex flex-wrap items-center gap-4 pt-1">
+              <button
+                type="submit"
+                data-submit
+                class="inline-flex items-center gap-2 rounded-input border border-action bg-white px-7 py-3 text-[14px] font-semibold text-action transition-colors hover:bg-action hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                面談を申し込む
+              </button>
+              <p data-form-msg class="text-[13px] text-ash" role="status" aria-live="polite"></p>
+            </div>
+          </form>
+        ) : (
+          <p class="text-center text-[14px] text-ash">フォーム接続待ち（site.config.ts の formEndpoint を設定してください）。</p>
+        )
+      }
+    </div>
+
+    <p class="reveal mt-5 text-center text-[13px] text-ash">
+      うまく送信できない場合は
+      <a href={`mailto:${config.contactEmail}`} class="text-signal hover:underline">{config.contactEmail}</a>
+      までご連絡ください。
+    </p>
+  </div>
+
+  <iframe name="contact_sink" title="送信先" class="hidden" aria-hidden="true"></iframe>
+</section>
+
+{
+  endpoint && (
+    <script define:vars={{ endpoint }}>
+      const form = document.querySelector('[data-contact-form]');
+      const msg = document.querySelector('[data-form-msg]');
+      const btn = document.querySelector('[data-submit]');
+      let submitting = false;
+
+      form?.setAttribute('action', endpoint);
+      form?.setAttribute('method', 'POST');
+      form?.setAttribute('target', 'contact_sink');
+
+      const sink = document.querySelector('iframe[name="contact_sink"]');
+      sink?.addEventListener('load', () => {
+        if (!submitting) return;
+        submitting = false;
+        if (btn) btn.disabled = false;
+        if (msg) {
+          msg.textContent = 'お申し込みを受け付けました。担当よりご連絡します。';
+          msg.style.color = '#145aff';
+        }
+        form?.reset();
+      });
+
+      form?.addEventListener('submit', (e) => {
+        if (form.querySelector('input[name="_gotcha"]')?.value) {
+          e.preventDefault();
+          return;
+        }
+        if (!form.checkValidity()) {
+          e.preventDefault();
+          form.reportValidity();
+          return;
+        }
+        submitting = true;
+        if (btn) btn.disabled = true;
+        if (msg) {
+          msg.textContent = '送信中…';
+          msg.style.color = '';
+        }
+        setTimeout(() => {
+          if (submitting) {
+            submitting = false;
+            if (btn) btn.disabled = false;
+            if (msg) msg.textContent = '送信に時間がかかっています。通信環境をご確認ください。';
+          }
+        }, 15000);
+      });
+    </script>
+  )
+}

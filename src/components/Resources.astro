@@ -1,128 +1,47 @@
 ---
 import SectionHeading from './SectionHeading.astro';
+import { resources } from '../data/resources';
+
+const base = import.meta.env.BASE_URL;
 ---
 
-<section id="resources" class="bg-white py-[var(--spacing-section)]">
-  <div class="mx-auto max-w-6xl px-5 md:px-8">
+<section id="resources" class="border-b border-border py-[var(--spacing-section)]">
+  <div class="mx-auto max-w-[1200px] px-5 md:px-8">
     <SectionHeading
       eyebrow="Resources"
-      title="資料各種"
-      lead="概要資料・操作マニュアル・ペライチチラシなど、紹介先にそのまま渡せる最新ファイルをまとめています。スプレッドシートを更新すれば即時反映されます。"
+      title="資料ダウンロード"
+      lead="紹介先にそのままお渡しいただける、WHEREのサービス資料です。"
     />
 
-    <div class="reveal mt-12" data-resources>
-      <!-- カテゴリ別フィルタ -->
-      <div class="mb-8 flex flex-wrap gap-2" data-resources-filter></div>
-      <!-- カード描画先 -->
-      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3" data-resources-list>
-        <p class="col-span-full text-sm text-gray-medium" data-resources-status>
-          読み込み中…
-        </p>
-      </div>
+    <div class="mt-12 grid gap-5 md:grid-cols-3">
+      {
+        resources.map((r) => {
+          const href = `${base}${r.file}`;
+          return (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener"
+              class="reveal group flex flex-col rounded-card border border-border bg-white p-7 shadow-feather transition-all hover:-translate-y-0.5 hover:shadow-feature"
+            >
+              <div class="flex items-center justify-between">
+                <span class="rounded-badge border border-signal/30 px-2 py-0.5 text-[11px] font-semibold tracking-wide text-signal">
+                  {r.type}
+                </span>
+                {r.pages && <span class="text-[11px] text-fog">{r.pages}</span>}
+              </div>
+              <h3 class="mt-5 text-[16px] font-semibold leading-snug text-graphite">{r.title}</h3>
+              <p class="mt-2.5 flex-1 text-[14px] leading-relaxed text-ash">{r.description}</p>
+              <span class="mt-6 inline-flex items-center gap-1.5 text-[14px] font-medium text-signal">
+                ダウンロード
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 3v12" /><path d="M7 10l5 5 5-5" /><path d="M5 21h14" />
+                </svg>
+              </span>
+            </a>
+          );
+        })
+      }
     </div>
   </div>
 </section>
-
-<script>
-  import { fetchSheet, esc, safeUrl } from '../lib/sheet';
-  import { config } from '../site.config';
-
-  type Item = {
-    category: string;
-    title: string;
-    description: string;
-    type: string;
-    url: string;
-    updated: string;
-  };
-
-  const listEl = document.querySelector('[data-resources-list]');
-  const filterEl = document.querySelector('[data-resources-filter]');
-  const statusEl = document.querySelector('[data-resources-status]');
-  let items: Item[] = [];
-  let active = 'すべて';
-
-  function typeIcon(t: string): string {
-    const s = (t || '').toLowerCase();
-    if (s.includes('pdf')) return 'PDF';
-    if (s.includes('スライド') || s.includes('slide')) return 'SLIDE';
-    if (s.includes('動画') || s.includes('video')) return 'VIDEO';
-    if (s.includes('チラシ') || s.includes('flyer')) return 'FLYER';
-    return 'DOC';
-  }
-
-  function render() {
-    if (!listEl) return;
-    const shown = items.filter((i) => active === 'すべて' || i.category === active);
-    if (!shown.length) {
-      listEl.innerHTML =
-        '<p class="col-span-full text-sm text-gray-medium">該当する資料がありません。</p>';
-      return;
-    }
-    listEl.innerHTML = shown
-      .map((i) => {
-        const url = safeUrl(i.url);
-        const tag = typeIcon(i.type);
-        const card = `
-          <span class="flex items-center justify-between">
-            <span class="text-[11px] font-semibold tracking-wider text-electric">${tag}</span>
-            ${i.updated ? `<span class="text-[11px] text-gray-medium">${esc(i.updated)}</span>` : ''}
-          </span>
-          <span class="mt-4 block text-base font-semibold text-navy">${esc(i.title)}</span>
-          ${i.description ? `<span class="mt-2 block text-sm leading-relaxed text-offblack/70">${esc(i.description)}</span>` : ''}
-          <span class="mt-5 inline-flex items-center gap-1 text-sm font-medium ${url ? 'text-electric' : 'text-gray-medium'}">
-            ${url ? '開く →' : 'リンク未設定'}
-          </span>`;
-        return url
-          ? `<a href="${url}" target="_blank" rel="noopener" class="flex flex-col border border-border bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-navy hover:shadow-md">${card}</a>`
-          : `<div class="flex flex-col border border-border bg-white p-6">${card}</div>`;
-      })
-      .join('');
-  }
-
-  function renderFilters() {
-    if (!filterEl) return;
-    const cats = ['すべて', ...Array.from(new Set(items.map((i) => i.category).filter(Boolean)))];
-    filterEl.innerHTML = cats
-      .map(
-        (c) =>
-          `<button type="button" data-cat="${esc(c)}" class="rounded-full border px-4 py-1.5 text-sm transition-colors ${
-            c === active ? 'border-navy bg-navy text-white' : 'border-border text-offblack hover:border-navy'
-          }">${esc(c)}</button>`,
-      )
-      .join('');
-    filterEl.querySelectorAll('button').forEach((b) =>
-      b.addEventListener('click', () => {
-        active = b.getAttribute('data-cat') || 'すべて';
-        renderFilters();
-        render();
-      }),
-    );
-  }
-
-  async function init() {
-    if (!config.sheets.resources) {
-      if (statusEl)
-        statusEl.textContent =
-          'スプレッドシート未設定です（site.config.ts の sheets.resources を設定してください）。';
-      return;
-    }
-    try {
-      const rows = await fetchSheet(config.sheets.resources);
-      items = rows.map((r) => ({
-        category: r['category'] || r['カテゴリ'] || '',
-        title: r['title'] || r['タイトル'] || '',
-        description: r['description'] || r['説明'] || '',
-        type: r['type'] || r['種別'] || '',
-        url: r['url'] || r['URL'] || r['リンク'] || '',
-        updated: r['updated'] || r['更新日'] || '',
-      }));
-      renderFilters();
-      render();
-    } catch (e) {
-      if (statusEl) statusEl.textContent = '資料の読み込みに失敗しました。時間をおいて再読み込みしてください。';
-    }
-  }
-
-  init();
-</script>

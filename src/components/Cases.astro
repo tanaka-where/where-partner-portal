@@ -1,0 +1,19 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import PressTile from './PressTile.astro';
+import { cases } from '../data/press';
+---
+
+<section id="cases" class="border-b border-border py-[var(--spacing-section)]">
+  <div class="mx-auto max-w-[1200px] px-5 md:px-8">
+    <SectionHeading
+      eyebrow="Case Studies"
+      title="導入事例"
+      lead="WHEREを活用いただいている企業様の事例です。紹介先への説明にご活用ください。"
+    />
+
+    <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {cases.map((item) => <PressTile item={item} />)}
+    </div>
+  </div>
+</section>

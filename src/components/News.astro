@@ -1,0 +1,30 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import PressTile from './PressTile.astro';
+import { news } from '../data/press';
+import { config } from '../site.config';
+---
+
+<section id="news" class="border-b border-border bg-sky py-[var(--spacing-section)]">
+  <div class="mx-auto max-w-[1200px] px-5 md:px-8">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <SectionHeading
+        eyebrow="News"
+        title="ニュース"
+        lead="WHEREの最新のプレスリリース・お知らせです。"
+      />
+      <a
+        href={config.links.prtimes}
+        target="_blank"
+        rel="noopener"
+        class="reveal shrink-0 text-[13px] font-medium text-signal hover:underline"
+      >
+        PR TIMESで一覧を見る →
+      </a>
+    </div>
+
+    <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {news.map((item) => <PressTile item={item} />)}
+    </div>
+  </div>
+</section>

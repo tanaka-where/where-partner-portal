@@ -1,0 +1,40 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import { featuredVideos } from '../data/media';
+---
+
+<section id="media" class="border-b border-border py-[var(--spacing-section)]">
+  <div class="mx-auto max-w-[1200px] px-5 md:px-8">
+    <SectionHeading
+      eyebrow="Video"
+      title="出演動画"
+      lead="WHEREのメディア出演・紹介動画です。"
+    />
+
+    <div class="mt-12 grid gap-8 md:grid-cols-2">
+      {
+        featuredVideos.map((v) => (
+          <figure class="reveal">
+            <div class="overflow-hidden rounded-image border border-border bg-white shadow-feature">
+              <div class="aspect-video w-full">
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${v.youtubeId}`}
+                  title={v.title}
+                  class="h-full w-full"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerpolicy="strict-origin-when-cross-origin"
+                  allowfullscreen
+                />
+              </div>
+            </div>
+            <figcaption class="mt-4">
+              <p class="text-[15px] font-semibold text-graphite">{v.title}</p>
+              <p class="mt-1 text-[13px] text-ash">{v.description}</p>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>

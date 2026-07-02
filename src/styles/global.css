@@ -1,87 +1,114 @@
 @import 'tailwindcss';
 
 /*
- * WHERE デザインシステム（Design-System-Inspired-by-WHERE.md 準拠）
- * 超高コントラストのモノクロを基調に、エレクトリックブルーをアクセントに用いる。
+ * デザインシステム: "Relate" ライトテーマ（DESIGN (1).md 準拠）
+ * 近白 #fcfcfc のキャンバス、Inter + Noto Sans JP、
+ * アクセントブルー #145aff は「テキスト/枠/フォーカス」のみ（塗りには使わない）。
+ * 見出しは負のレタースペーシングで密度を出す。
  */
 @theme {
-  /* --- Color: Primary --- */
-  --color-black: #000000;
-  --color-white: #ffffff;
-
-  /* --- Color: Accent --- */
-  --color-electric: #0000ee; /* Electric Blue: 主要なインタラクション */
-  --color-navy: #121d2a; /* Deep Navy: プレミアム見出し/オーバーレイ */
-  --color-corporate: #1556a5; /* Corporate Blue */
-  --color-steel: #12519c; /* Steel Blue */
-
-  /* --- Neutral Scale --- */
-  --color-offblack: #222222;
-  --color-gray-medium: #8c8c8c;
-  --color-gray-light: #e6e6e6;
-  --color-gray-pale: #d9d9d9;
-
-  /* --- Surface & Borders --- */
-  --color-surface: #f5f5f5;
-  --color-surface-soft: #fafafa;
-  --color-border: #e6e6e6;
+  /* --- Colors --- */
+  --color-canvas: #fcfcfc; /* ページ背景・カード地 */
+  --color-sky: #f0f4fe; /* 淡い青みのセクション背景 */
+  --color-ink: #020520; /* ディスプレイ見出し */
+  --color-graphite: #14141e; /* 見出し・強めの本文 */
+  --color-slate: #374151; /* UIラベル・中程度の本文 */
+  --color-ash: #696a72; /* 副次テキスト */
+  --color-fog: #95959b; /* プレースホルダ・メタ */
+  --color-steel: #6b7280; /* 補助テキスト */
+  --color-signal: #145aff; /* アクセント（テキスト/枠/フォーカスのみ） */
+  --color-action: #0f1f3d; /* アウトラインCTAの枠/文字 */
+  --color-hairline: #cfcfcf; /* 罫線 */
+  --color-border: #e6e6e6; /* 境界線 */
+  --color-emerald: #16ca2e;
+  --color-coral: #f26052;
+  --color-amber: #ffa64d;
 
   /* --- Typography --- */
   --font-sans:
-    'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica,
-    Arial, sans-serif;
-  --font-display: 'Marcellus', Georgia, 'Times New Roman', serif;
+    'Inter', 'Noto Sans JP', ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  /* --- Radius --- */
+  --radius-badge: 4px;
+  --radius-card: 8px;
+  --radius-input: 12px;
+  --radius-image: 16px;
+  --radius-feature: 40px;
 
   /* --- Layout --- */
-  --spacing-section: 7rem;
+  --spacing-section: 80px;
 }
 
-/* --- Base reset / globals --- */
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
 
+/* 横スクロール防止（レイアウト崩れの保険） */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 body {
   font-family: var(--font-sans);
-  color: var(--color-offblack);
-  background: var(--color-white);
+  color: var(--color-graphite);
+  background: var(--color-canvas);
   line-height: 1.6;
-  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: var(--color-electric);
-  color: var(--color-white);
+  background: var(--color-signal);
+  color: #fff;
 }
 
-/* キーボード操作時のフォーカスリング（アクセシビリティ） */
 :focus-visible {
-  outline: 2px solid var(--color-electric);
+  outline: 2px solid var(--color-signal);
   outline-offset: 2px;
 }
 
-/* --- Typography helpers --- */
-.font-display {
-  font-family: var(--font-display);
-  font-weight: 400;
+/* 見出しの密度（負トラッキング） */
+.display {
+  color: var(--color-ink);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.heading {
+  color: var(--color-graphite);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
 }
 
-/* セクション見出しに使う小さなラベル（メタ） */
+/* セクション見出し上の小ラベル */
 .eyebrow {
   font-size: 12px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-gray-medium);
   font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-signal);
 }
 
-/* スクロール時のセクション内アンカーがヘッダーに隠れないように */
 [id] {
-  scroll-margin-top: 6rem;
+  scroll-margin-top: 5.5rem;
 }
 
-/* prefers-reduced-motion 対応 */
+/* カード共通のフェザーシャドウ */
+.shadow-feather {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 4px -2px;
+}
+.shadow-feature {
+  box-shadow:
+    rgba(0, 0, 0, 0.082) 0px 0.36px 1.81px -1.42px,
+    rgba(0, 0, 0, 0.07) 0px 1.37px 6.87px -2.83px,
+    rgba(0, 0, 0, 0.016) 0px 6px 30px -4.25px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -94,13 +121,13 @@ body {
   }
 }
 
-/* 簡易な登場アニメーション（IntersectionObserver で .is-visible を付与） */
+/* 登場アニメーション */
 .reveal {
   opacity: 0;
-  transform: translateY(18px);
+  transform: translateY(16px);
   transition:
-    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .reveal.is-visible {
   opacity: 1;
