@@ -36,11 +36,13 @@ gas/Code.gs          ← 面談申し込み受信用 GAS
 
 ## 資料PDFの配置（必須）
 
-`public/docs/README.md` の対応表に従い、次の名前でPDFを置いてください。
+`public/docs/` に次の名前でPDFを置いてください（`src/data/resources.ts` の `file` と一致）。
 
-- `where-service-approachbook.pdf`（Approach Book / 商談用）
-- `where-service-onepager.pdf`（ペライチ / サービス概要）
-- `where-service-compact.pdf`（コンパクト版）
+| 置くファイル名 | 元ファイル |
+|---|---|
+| `where-service-approachbook.pdf` | WHERE_APB…商談用（Approach Book） |
+| `where-service-onepager.pdf` | WHERE_ペライチ資料（サービス概要） |
+| `where-service-compact.pdf` | WHEREご紹介資料_コンパクト版 |
 
 ## 面談申し込みフォーム（GAS）
 
